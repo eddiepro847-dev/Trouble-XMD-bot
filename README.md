@@ -1,11 +1,11 @@
 # 🚀 Trouble XMD Bot
 
 
-```markdown
+html
 <p align="center">
   <img src="Eddie-dev.jpg" width="300"/>
 </p>
-```
+
 A powerful Multi-Device WhatsApp bot built using **Baileys MD**, created by **Eddiepro847-dev**.  
 Packed with modern features like AI, media downloaders, stickers, admin tools, logo maker, and more.
 
