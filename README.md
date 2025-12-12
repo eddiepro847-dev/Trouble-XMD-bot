@@ -12,9 +12,9 @@ Packed with modern features like AI, media downloaders, stickers, admin tools, l
 ## ⭐ GitHub Repository Stats
 
 ![Followers](https://img.shields.io/github/followers/Eddiepro847-dev?style=for-the-badge)
-![Stars](https://img.shields.io/github/followers/Eddiepro847-dev?style=for-the-badge)
-![Forks](https://img.shields.io/github/followers/Eddiepro847-dev?style=for-the-badge)
-![Watchers](https://img.shields.io/github/followers/Eddiepro847-dev?style=for-the-badge)
+![Stars](https://img.shields.io/github/stars/Eddiepro847-dev/trouble-xmd?style=social)
+![Forks](https://img.shields.io/github/forks/Eddiepro847-dev/trouble-xmd?style=social )
+![Watchers](https://img.shields.io/github/watchers/Eddiepro847-dev/trouble-xmd?style=social )
 
 ---
 
