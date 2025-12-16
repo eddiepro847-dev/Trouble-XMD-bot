@@ -1,5 +1,9 @@
 # 🚀 Trouble XMD Bot
+## 🚀 Deploy Trouble XMD Bot on Render
 
+[![Deploy to Render](https://render.com/images/deploy-to-render-button.svg)](
+https://render.com/deploy?repo=https://github.com/eddiepro847-dev/Trouble-XMD-bot
+)
 
 
 <p align="center">
