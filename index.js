@@ -1,5 +1,4 @@
 const express = require("express");
-const qrcode = require("qrcode-terminal");
 const {
   default: makeWASocket,
   useMultiFileAuthState,
@@ -9,7 +8,7 @@ const {
 const app = express();
 const PORT = process.env.PORT || 3000;
 
-// Simple web server for Render
+// Web server (required by Render)
 app.get("/", (req, res) => {
   res.send("✅ Trouble XMD Bot is running");
 });
@@ -18,7 +17,6 @@ app.listen(PORT, () => {
   console.log("🌍 Server running on port " + PORT);
 });
 
-// WhatsApp bot
 async function startBot() {
   const { state, saveCreds } = await useMultiFileAuthState("auth_info");
   const { version } = await fetchLatestBaileysVersion();
@@ -26,18 +24,13 @@ async function startBot() {
   const sock = makeWASocket({
     version,
     auth: state,
-    printQRInTerminal: true
+    printQRInTerminal: false
   });
 
   sock.ev.on("creds.update", saveCreds);
 
-  sock.ev.on("connection.update", (update) => {
-    const { qr, connection } = update;
-
-    if (qr) {
-      console.log("📱 Scan this QR to connect:");
-      qrcode.generate(qr, { small: true });
-    }
+  sock.ev.on("connection.update", async (update) => {
+    const { connection } = update;
 
     if (connection === "open") {
       console.log("✅ Trouble XMD connected successfully");
@@ -48,6 +41,19 @@ async function startBot() {
       startBot();
     }
   });
+
+  // 🔑 Generate Pair Code
+  if (!state.creds.registered) {
+    const phoneNumber = process.env.PAIR_NUMBER;
+    if (!phoneNumber) {
+      console.log("❌ Set PAIR_NUMBER environment variable");
+      return;
+    }
+
+    const code = await sock.requestPairingCode(phoneNumber);
+    console.log("🔗 Pair Code:", code);
+    console.log("📱 Enter this code in WhatsApp → Linked Devices");
+  }
 }
 
 startBot();
