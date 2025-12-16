@@ -1,0 +1,57 @@
+
+
+services:
+  - type: web
+    name: trouble-xmd-bot
+    env: node
+    plan: free
+    region: oregon
+    startCommand: npm start
+    buildCommand: npm install
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: DATABASE_URL
+        fromDatabase:
+          name: trouble-xmd-db
+          property: connectionString
+      - key: BOT_OWNER
+        value: "256753517207" # replace with your number
+      - key: SESSION_FILE
+        value: "session.json" # where your WhatsApp auth session will be saved
+      - key: PORT
+        value: "1000" # optional, default web port
+databases:
+  - name: trouble-xmd-db
+    plan: free
+    region: oregon
+
+
+---
+
+✅ Notes:
+
+1. Replace "your-phone-number" with your WhatsApp bot owner number (with country code).
+
+
+2. Make sure your package.json has:
+
+
+
+"scripts": {
+  "start": "node index.js"
+}
+
+3. SESSION_FILE is where your bot will store the WhatsApp credentials.
+
+
+4. PORT can be any number; make sure your Express server uses process.env.PORT || 1000.
+
+
+
+
+---
+
+If you want, I can also write the minimal index.js and package.json so that this render.yaml deploys your bot without errors.
+
+Do you want me to do that next?
