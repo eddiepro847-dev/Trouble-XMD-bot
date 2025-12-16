@@ -1,48 +1,53 @@
-// Import required modules
-const { default: makeWASocket, useMultiFileAuthState, fetchLatestBaileysVersion } = require('@whiskeysockets/baileys');
-const qrcode = require('qrcode-terminal');
-const express = require('express');
+const express = require("express");
+const qrcode = require("qrcode-terminal");
+const {
+  default: makeWASocket,
+  useMultiFileAuthState,
+  fetchLatestBaileysVersion
+} = require("@whiskeysockets/baileys");
 
-// Start the WhatsApp bot
+const app = express();
+const PORT = process.env.PORT || 3000;
+
+// Simple web server for Render
+app.get("/", (req, res) => {
+  res.send("✅ Trouble XMD Bot is running");
+});
+
+app.listen(PORT, () => {
+  console.log("🌍 Server running on port " + PORT);
+});
+
+// WhatsApp bot
 async function startBot() {
-    try {
-        // Create auth state folder
-        const { state, saveCreds } = await useMultiFileAuthState('auth');
+  const { state, saveCreds } = await useMultiFileAuthState("auth_info");
+  const { version } = await fetchLatestBaileysVersion();
 
-        // Get latest Baileys version
-        const { version } = await fetchLatestBaileysVersion();
+  const sock = makeWASocket({
+    version,
+    auth: state,
+    printQRInTerminal: true
+  });
 
-        // Create socket
-        const sock = makeWASocket({
-            version,
-            auth: state,
-        });
+  sock.ev.on("creds.update", saveCreds);
 
-        // Connection updates
-        sock.ev.on('connection.update', (update) => {
-            const { qr, connection } = update;
+  sock.ev.on("connection.update", (update) => {
+    const { qr, connection } = update;
 
-            if (qr) {
-                // Print QR code in console for scanning
-                qrcode.generate(qr, { small: true });
-                console.log('Scan this QR code with WhatsApp to connect your bot.');
-            }
-
-            console.log('Connection status:', connection);
-        });
-
-        // Save credentials on update
-        sock.ev.on('creds.update', saveCreds);
-
-    } catch (error) {
-        console.error('Bot startup error:', error);
+    if (qr) {
+      console.log("📱 Scan this QR to connect:");
+      qrcode.generate(qr, { small: true });
     }
+
+    if (connection === "open") {
+      console.log("✅ Trouble XMD connected successfully");
+    }
+
+    if (connection === "close") {
+      console.log("❌ Connection closed, restarting...");
+      startBot();
+    }
+  });
 }
 
-// Run the bot
 startBot();
-
-// Express server to keep Render happy
-const app = express();
-app.get('/', (req, res) => res.send('Trouble XMD Bot is running!'));
-app.listen(process.env.PORT || 3000, () => console.log('Server listening on port', process.env.PORT || 3000));
